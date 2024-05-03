@@ -2,7 +2,7 @@
   "name": "angular-peerjs",
   "version": "0.0.0",
   "scripts": {
-    "ng": "export NODE_OPTIONS=--openssl-legacy-provider && ng",
+    "ng": "export NODE_OPTIONS=--openssl-legacy-provider ",
     "start": "ng serve",
     "start:legacy": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "ng build",

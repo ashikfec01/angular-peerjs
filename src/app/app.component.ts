@@ -33,9 +33,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.peerId = this.callService.initPeer();
     this.callService.localStream$
       .pipe(filter((res) => !!res))
-      .subscribe(
-        (stream) => (this.localVideo.nativeElement.srcObject = stream)
-      );
+      .subscribe((stream) => {
+        this.localVideo.nativeElement.srcObject = stream;
+        console.log({ stream }, this.localVideo.nativeElement);
+      });
     this.callService.remoteStream$
       .pipe(filter((res) => !!res))
       .subscribe(

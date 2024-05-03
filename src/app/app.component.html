@@ -22,11 +22,17 @@
         <video #remoteVideo
                id="remote-video"
                poster="./assets/video-placeholder.jpg"
-               autoplay
-               playsinline></video>
-        <video #localVideo
-               id="local-video" autoplay
+               video autoplay
+               webkit-playsinline
                playsinline
+               disablePictureInPicture
+               muted></video>
+        <video #localVideo
+               id="local-video" video
+               autoplay
+               webkit-playsinline
+               playsinline
+               disablePictureInPicture
                muted></video>
       </div>
       <p>
