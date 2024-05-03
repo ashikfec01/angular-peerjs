@@ -57,6 +57,7 @@ export class CallService {
 
   public async establishMediaCall(remotePeerId: string) {
     console.log(remotePeerId);
+    this.snackBar.open(remotePeerId, "Close");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -64,6 +65,7 @@ export class CallService {
       });
       console.log(stream);
       const connection = this.peer.connect(remotePeerId);
+      this.snackBar.open(connection.stringify(connection.dataChannel), "Close");
       connection.on("error", (err) => {
         console.log(err);
         this.snackBar.open(err, "Close");
