@@ -23,6 +23,7 @@ export class CallService {
 
   private isCallStartedBs = new Subject<boolean>();
   public isCallStarted$ = this.isCallStartedBs.asObservable();
+  stream: MediaStream;
 
   constructor(private snackBar: MatSnackBar) {}
 
@@ -60,11 +61,11 @@ export class CallService {
     console.log({ remotePeerId });
     this.snackBar.open(remotePeerId, "Close");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      this.stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-      console.log(stream);
+      console.log(this.stream);
       this.connection = this.peer.connect(remotePeerId);
       console.log(this.connection);
       this.connection.on("error", (err) => {
@@ -72,13 +73,13 @@ export class CallService {
         this.snackBar.open(err, "Close");
       });
 
-      this.mediaCall = this.peer.call(remotePeerId, stream);
+      this.mediaCall = this.peer.call(remotePeerId, this.stream);
       if (!this.mediaCall) {
         let errorMessage = "Unable to connect to remote peer";
         this.snackBar.open(errorMessage, "Close");
         throw new Error(errorMessage);
       }
-      this.localStreamBs.next(stream);
+      this.localStreamBs.next(this.stream);
       this.isCallStartedBs.next(true);
 
       this.mediaCall.on("stream", (remoteStream) => {
@@ -92,7 +93,7 @@ export class CallService {
       this.mediaCall.on("close", () => this.onCallClose());
     } catch (ex) {
       console.log(ex);
-      console.log(this.connection);
+      console.log(this.connection, this.stream);
       this.snackBar.open(ex, "Close");
       this.isCallStartedBs.next(false);
     }
