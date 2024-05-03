@@ -46,7 +46,8 @@ export class CallService {
       try {
         let id = uuidv4();
         console.log({ id });
-        this.peer = new Peer(id, peerJsOptions);
+        const peer = new Peer(id, peerJsOptions);
+        this.peer = peer;
         return id;
       } catch (error) {
         console.error({ error });
@@ -55,15 +56,16 @@ export class CallService {
   }
 
   public async establishMediaCall(remotePeerId: string) {
+    console.log(remotePeerId);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-
+      console.log(stream);
       const connection = this.peer.connect(remotePeerId);
       connection.on("error", (err) => {
-        console.error(err);
+        console.log(err);
         this.snackBar.open(err, "Close");
       });
 
@@ -93,11 +95,17 @@ export class CallService {
   }
 
   public async enableCallAnswer() {
+    const streamTest = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    console.log(streamTest);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
+      console.log(stream);
       this.localStreamBs.next(stream);
       this.peer.on("call", async (call) => {
         this.mediaCall = call;
@@ -115,7 +123,7 @@ export class CallService {
         this.mediaCall.on("close", () => this.onCallClose());
       });
     } catch (ex) {
-      console.error(ex);
+      console.log(ex);
       this.snackBar.open(ex, "Close");
       this.isCallStartedBs.next(false);
     }
