@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 export class CallService {
   private peer: Peer;
   private mediaCall: Peer.MediaConnection;
+  connection;
 
   private localStreamBs: BehaviorSubject<MediaStream> = new BehaviorSubject(
     null
@@ -64,9 +65,9 @@ export class CallService {
         audio: true,
       });
       console.log(stream);
-      const connection = this.peer.connect(remotePeerId);
-      console.log(connection);
-      connection.on("error", (err) => {
+      this.connection = this.peer.connect(remotePeerId);
+      console.log(this.connection);
+      this.connection.on("error", (err) => {
         console.log(err);
         this.snackBar.open(err, "Close");
       });
@@ -90,7 +91,8 @@ export class CallService {
       });
       this.mediaCall.on("close", () => this.onCallClose());
     } catch (ex) {
-      console.error(ex);
+      console.log(ex);
+      console.log(this.connection);
       this.snackBar.open(ex, "Close");
       this.isCallStartedBs.next(false);
     }
