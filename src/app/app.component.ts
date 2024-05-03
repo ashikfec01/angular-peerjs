@@ -22,7 +22,7 @@ import {
 export class AppComponent implements OnInit, OnDestroy {
   public isCallStarted$: Observable<boolean>;
   private peerId: string;
-
+  dialogRef;
   @ViewChild("localVideo") localVideo: ElementRef<HTMLVideoElement>;
   @ViewChild("remoteVideo") remoteVideo: ElementRef<HTMLVideoElement>;
 
@@ -51,15 +51,15 @@ export class AppComponent implements OnInit, OnDestroy {
     let dialogData: DialogData = joinCall
       ? { peerId: null, joinCall: true }
       : { peerId: this.peerId, joinCall: false };
-    const dialogRef = this.dialog.open(CallInfoDialogComponents, {
+    this.dialogRef = this.dialog.open(CallInfoDialogComponents, {
       width: "250px",
       data: dialogData,
     });
 
-    dialogRef
+    this.dialogRef
       .afterClosed()
       .pipe(
-        switchMap((peerId) =>
+        switchMap((peerId: string) =>
           joinCall
             ? of(this.callService.establishMediaCall(peerId))
             : of(this.callService.enableCallAnswer())
